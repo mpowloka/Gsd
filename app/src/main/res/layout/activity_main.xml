@@ -25,7 +25,7 @@
             android:layout_width="match_parent"
             android:layout_height="0dp"
 
-            android:name="com.mpowloka.gsd.userlist.UserListFragment"
+            android:name="com.mpowloka.gsd.userdetails.UserDetailsFragment"
 
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/toolbar"
