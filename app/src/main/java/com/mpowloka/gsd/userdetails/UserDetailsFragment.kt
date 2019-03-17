@@ -11,7 +11,9 @@ import androidx.lifecycle.ViewModelProviders
 import com.bumptech.glide.Glide
 import com.mpowloka.gsd.R
 import com.mpowloka.gsd.common.ViewModelFactory
+import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
+import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.fragment_user_details.*
 
 class UserDetailsFragment : Fragment() {
@@ -30,7 +32,7 @@ class UserDetailsFragment : Fragment() {
 
         viewModel = ViewModelProviders.of(
             this,
-            ViewModelFactory.getInstanceWithMockedRepository()
+            ViewModelFactory.getInstance()
         ).get(UserDetailsViewModel::class.java)
 
 
@@ -39,7 +41,10 @@ class UserDetailsFragment : Fragment() {
     override fun onResume() {
         super.onResume()
 
-        userDetailsDisposable = viewModel.currentUserDetails.subscribe { userDetails ->
+        userDetailsDisposable = viewModel.currentUserDetails
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe { userDetails ->
             val actionBar = (activity as? AppCompatActivity)?.supportActionBar
             actionBar?.title = userDetails.login
 

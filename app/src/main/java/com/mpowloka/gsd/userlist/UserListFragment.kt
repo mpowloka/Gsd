@@ -11,7 +11,9 @@ import com.mpowloka.gsd.R
 import com.mpowloka.gsd.common.NavigationComponent
 import com.mpowloka.gsd.common.ViewModelFactory
 import com.mpowloka.gsd.userlist.list.UserListRecyclerAdapter
+import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
+import io.reactivex.schedulers.Schedulers
 
 import kotlinx.android.synthetic.main.fragment_user_list.*
 
@@ -32,7 +34,7 @@ class UserListFragment : Fragment() {
 
         viewModel = ViewModelProviders.of(
             this,
-            ViewModelFactory.getInstanceWithMockedRepository()
+            ViewModelFactory.getInstance()
         ).get(UserListViewModel::class.java)
 
         val context = context ?: return
@@ -55,7 +57,10 @@ class UserListFragment : Fragment() {
     override fun onResume() {
         super.onResume()
 
-        usersToDisplayDisposable = viewModel.itemsToDisplay.subscribe {
+        usersToDisplayDisposable = viewModel.itemsToDisplay
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe {
             recyclerAdapter.items = it
         }
     }

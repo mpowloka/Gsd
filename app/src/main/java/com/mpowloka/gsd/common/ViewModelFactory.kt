@@ -2,6 +2,8 @@ package com.mpowloka.gsd.common
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
+import com.mpowloka.gsd.data.user.UsersApi
+import com.mpowloka.gsd.data.user.UsersRepositoryImpl
 import com.mpowloka.gsd.domain.user.User
 import com.mpowloka.gsd.domain.user.UsersRepository
 import com.mpowloka.gsd.domain.user.usecase.GetAllUsersUseCase
@@ -33,6 +35,8 @@ class ViewModelFactory(
 
         private var FAKE_INSTANCE: ViewModelFactory? = null
 
+        private var INSTANCE: ViewModelFactory? = null
+
         fun getInstanceWithMockedRepository(): ViewModelFactory {
             if(FAKE_INSTANCE == null) {
                 FAKE_INSTANCE = ViewModelFactory(object : UsersRepository {
@@ -57,6 +61,17 @@ class ViewModelFactory(
             }
 
             return FAKE_INSTANCE!!
+        }
+
+        fun getInstance(): ViewModelFactory {
+            if (INSTANCE == null) {
+                INSTANCE = ViewModelFactory(
+                    UsersRepositoryImpl(
+                        UsersApi.newInstance()
+                    )
+                )
+            }
+            return INSTANCE!!
         }
 
     }
