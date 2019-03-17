@@ -5,6 +5,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.mpowloka.gsd.R
 import com.mpowloka.gsd.common.NavigationComponent
+import com.mpowloka.gsd.domain.user.User
 
 class UserListRecyclerAdapter(
     private val navigationComponent: NavigationComponent
@@ -38,16 +39,16 @@ class UserListRecyclerAdapter(
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         val item = items[position]
 
-        if (holder is UserViewHolder && item is Item.User) {
+        if (holder is UserViewHolder && item is Item.UserItem) {
             holder.bind(item.login, item.pictureUrl)
         }
     }
 
     override fun getItemViewType(position: Int) = when (items[position]) {
 
-        is Item.NoInternetWarning -> NO_INTERNET_WARNING_TYPE
+        is Item.NoInternetWarningItem -> NO_INTERNET_WARNING_TYPE
 
-        is Item.User -> USER_TYPE
+        is Item.UserItem -> USER_TYPE
 
     }
 
@@ -55,9 +56,11 @@ class UserListRecyclerAdapter(
 
     sealed class Item {
 
-        object NoInternetWarning: Item()
+        object NoInternetWarningItem : Item()
 
-        class User(val login: String, val pictureUrl: String): Item()
+        data class UserItem(val login: String, val pictureUrl: String) : Item() {
+            constructor(user: User) : this(user.login, user.avatarUrl)
+        }
 
     }
 

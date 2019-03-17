@@ -27,15 +27,15 @@ class UserListFragment : Fragment() {
         recycler.layoutManager = LinearLayoutManager(context)
         recycler.adapter = UserListRecyclerAdapter(navigationComponent).apply {
             items = listOf(
-                UserListRecyclerAdapter.Item.NoInternetWarning,
-                UserListRecyclerAdapter.Item.User(
+                UserListRecyclerAdapter.Item.NoInternetWarningItem,
+                UserListRecyclerAdapter.Item.UserItem(
                     "szumi",
                     "http://cdn.journaldev.com/wp-content/uploads/2016/11/android-image-picker-project-structure.png"
                 ),
-                UserListRecyclerAdapter.Item.User("scheja", "https://avatars3.githubusercontent.com/u/583231?v=4"),
-                UserListRecyclerAdapter.Item.User("sancia", "https://avatars3.githubusercontent.com/u/583231?v=4"),
-                UserListRecyclerAdapter.Item.User("seycher", "https://avatars3.githubusercontent.com/u/583231?v=4"),
-                UserListRecyclerAdapter.Item.User("tomokene", "https://avatars3.githubusercontent.com/u/583231?v=4")
+                UserListRecyclerAdapter.Item.UserItem("scheja", "https://avatars3.githubusercontent.com/u/583231?v=4"),
+                UserListRecyclerAdapter.Item.UserItem("sancia", "https://avatars3.githubusercontent.com/u/583231?v=4"),
+                UserListRecyclerAdapter.Item.UserItem("seycher", "https://avatars3.githubusercontent.com/u/583231?v=4"),
+                UserListRecyclerAdapter.Item.UserItem("tomokene", "https://avatars3.githubusercontent.com/u/583231?v=4")
 
             )
         }
