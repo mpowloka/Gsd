@@ -4,8 +4,11 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.mpowloka.gsd.R
+import com.mpowloka.gsd.common.NavigationComponent
 
-class UserListRecyclerAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+class UserListRecyclerAdapter(
+    private val navigationComponent: NavigationComponent
+) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     var items: List<Item> = emptyList()
         set(value) {
@@ -22,7 +25,8 @@ class UserListRecyclerAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() 
 
         USER_TYPE -> UserViewHolder(
             LayoutInflater.from(parent.context)
-                .inflate(R.layout.view_holder_user, parent, false)
+                .inflate(R.layout.view_holder_user, parent, false),
+            navigationComponent
         )
 
         else -> throw IllegalStateException(

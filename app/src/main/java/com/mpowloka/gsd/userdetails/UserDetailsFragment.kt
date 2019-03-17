@@ -1,8 +1,9 @@
 package com.mpowloka.gsd.userdetails
 
-import android.content.Context
 import android.os.Bundle
-import android.view.*
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import com.bumptech.glide.Glide
@@ -33,4 +34,11 @@ class UserDetailsFragment : Fragment() {
         actionBar?.setDisplayHomeAsUpEnabled(true)
         actionBar?.title = "Jon Skeet"
     }
+
+    companion object {
+
+        fun newInstance() = UserDetailsFragment()
+
+    }
+
 }

@@ -6,6 +6,7 @@ import androidx.appcompat.widget.SearchView
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.mpowloka.gsd.R
+import com.mpowloka.gsd.common.NavigationComponent
 import com.mpowloka.gsd.userlist.list.UserListRecyclerAdapter
 
 import kotlinx.android.synthetic.main.fragment_user_list.*
@@ -21,9 +22,10 @@ class UserListFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         val context = context ?: return
+        val navigationComponent = (activity as? NavigationComponent) ?: return
 
         recycler.layoutManager = LinearLayoutManager(context)
-        recycler.adapter = UserListRecyclerAdapter().apply {
+        recycler.adapter = UserListRecyclerAdapter(navigationComponent).apply {
             items = listOf(
                 UserListRecyclerAdapter.Item.NoInternetWarning,
                 UserListRecyclerAdapter.Item.User(
@@ -58,5 +60,10 @@ class UserListFragment : Fragment() {
         }
     }
 
+    companion object {
+
+        fun newInstance() = UserListFragment()
+
+    }
 
 }
