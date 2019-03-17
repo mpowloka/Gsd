@@ -12,6 +12,9 @@ class UserListRecyclerAdapter(
     private val navigationComponent: NavigationComponent,
     private val viewModel: UserListViewModel
 ) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+    init {
+        setHasStableIds(true)
+    }
 
     var items: List<Item> = emptyList()
         set(value) {
@@ -53,6 +56,16 @@ class UserListRecyclerAdapter(
 
         is Item.UserItem -> USER_TYPE
 
+    }
+
+    override fun getItemId(position: Int): Long {
+        val item = items[position]
+        return when(item) {
+
+            is Item.UserItem -> item.user.userId
+
+            Item.NoInternetWarningItem -> -1L
+        }
     }
 
     override fun getItemCount() = items.size

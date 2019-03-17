@@ -2,6 +2,7 @@ package com.mpowloka.gsd.userlist
 
 import android.os.Bundle
 import android.view.*
+import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.SearchView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProviders
@@ -43,6 +44,14 @@ class UserListFragment : Fragment() {
 
     }
 
+    override fun onActivityCreated(savedInstanceState: Bundle?) {
+        super.onActivityCreated(savedInstanceState)
+
+        val actionBar = (activity as? AppCompatActivity)?.supportActionBar
+        actionBar?.setDisplayHomeAsUpEnabled(false)
+        actionBar?.title = getString(R.string.app_name)
+    }
+
     override fun onResume() {
         super.onResume()
 
@@ -67,8 +76,8 @@ class UserListFragment : Fragment() {
 
                 override fun onQueryTextSubmit(query: String) = false
 
-                override fun onQueryTextChange(newText: String?): Boolean {
-                    //TODO
+                override fun onQueryTextChange(newText: String): Boolean {
+                    viewModel.nextSearchPhrase(newText)
                     return true
                 }
 
