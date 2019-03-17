@@ -4,14 +4,22 @@ import android.os.Bundle
 import android.view.*
 import androidx.appcompat.widget.SearchView
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.mpowloka.gsd.R
 import com.mpowloka.gsd.common.NavigationComponent
+import com.mpowloka.gsd.common.ViewModelFactory
 import com.mpowloka.gsd.userlist.list.UserListRecyclerAdapter
+import io.reactivex.disposables.Disposable
 
 import kotlinx.android.synthetic.main.fragment_user_list.*
 
 class UserListFragment : Fragment() {
+
+    lateinit var viewModel: UserListViewModel
+
+    private lateinit var usersToDisplayDisposable: Disposable
+    private lateinit var recyclerAdapter: UserListRecyclerAdapter
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         setHasOptionsMenu(true)
@@ -21,24 +29,32 @@ class UserListFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        viewModel = ViewModelProviders.of(
+            this,
+            ViewModelFactory.getInstanceWithMockedRepository()
+        ).get(UserListViewModel::class.java)
+
         val context = context ?: return
         val navigationComponent = (activity as? NavigationComponent) ?: return
+        recyclerAdapter = UserListRecyclerAdapter(navigationComponent, viewModel)
 
         recycler.layoutManager = LinearLayoutManager(context)
-        recycler.adapter = UserListRecyclerAdapter(navigationComponent).apply {
-            items = listOf(
-                UserListRecyclerAdapter.Item.NoInternetWarningItem,
-                UserListRecyclerAdapter.Item.UserItem(
-                    "szumi",
-                    "http://cdn.journaldev.com/wp-content/uploads/2016/11/android-image-picker-project-structure.png"
-                ),
-                UserListRecyclerAdapter.Item.UserItem("scheja", "https://avatars3.githubusercontent.com/u/583231?v=4"),
-                UserListRecyclerAdapter.Item.UserItem("sancia", "https://avatars3.githubusercontent.com/u/583231?v=4"),
-                UserListRecyclerAdapter.Item.UserItem("seycher", "https://avatars3.githubusercontent.com/u/583231?v=4"),
-                UserListRecyclerAdapter.Item.UserItem("tomokene", "https://avatars3.githubusercontent.com/u/583231?v=4")
+        recycler.adapter = recyclerAdapter
 
-            )
+    }
+
+    override fun onResume() {
+        super.onResume()
+
+        usersToDisplayDisposable = viewModel.itemsToDisplay.subscribe {
+            recyclerAdapter.items = it
         }
+    }
+
+    override fun onPause() {
+        super.onPause()
+
+        usersToDisplayDisposable.dispose()
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {

@@ -9,15 +9,15 @@ import com.nhaarman.mockitokotlin2.verify
 import org.junit.Before
 import org.junit.Test
 
-class SetCurrentUserTest {
+class SetCurrentUserUseCaseTest {
 
-    private lateinit var SUT: SetCurrentUser
+    private lateinit var SUT: SetCurrentUserUseCase
     private lateinit var userRepositoryMock: UsersRepository
 
     @Before
     fun setup() {
         userRepositoryMock = mock()
-        SUT = SetCurrentUser(userRepositoryMock)
+        SUT = SetCurrentUserUseCase(userRepositoryMock)
     }
 
     @Test

@@ -6,9 +6,11 @@ import androidx.recyclerview.widget.RecyclerView
 import com.mpowloka.gsd.R
 import com.mpowloka.gsd.common.NavigationComponent
 import com.mpowloka.gsd.domain.user.User
+import com.mpowloka.gsd.userlist.UserListViewModel
 
 class UserListRecyclerAdapter(
-    private val navigationComponent: NavigationComponent
+    private val navigationComponent: NavigationComponent,
+    private val viewModel: UserListViewModel
 ) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     var items: List<Item> = emptyList()
@@ -27,7 +29,8 @@ class UserListRecyclerAdapter(
         USER_TYPE -> UserViewHolder(
             LayoutInflater.from(parent.context)
                 .inflate(R.layout.view_holder_user, parent, false),
-            navigationComponent
+            navigationComponent,
+            viewModel
         )
 
         else -> throw IllegalStateException(
@@ -40,7 +43,7 @@ class UserListRecyclerAdapter(
         val item = items[position]
 
         if (holder is UserViewHolder && item is Item.UserItem) {
-            holder.bind(item.login, item.pictureUrl)
+            holder.bind(item.user)
         }
     }
 
@@ -58,9 +61,7 @@ class UserListRecyclerAdapter(
 
         object NoInternetWarningItem : Item()
 
-        data class UserItem(val login: String, val pictureUrl: String) : Item() {
-            constructor(user: User) : this(user.login, user.avatarUrl)
-        }
+        data class UserItem(val user: User) : Item()
 
     }
 
