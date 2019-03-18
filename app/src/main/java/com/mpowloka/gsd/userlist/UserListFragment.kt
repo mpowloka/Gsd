@@ -49,9 +49,9 @@ class UserListFragment : Fragment() {
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
 
-        val actionBar = (activity as? AppCompatActivity)?.supportActionBar
-        actionBar?.setDisplayHomeAsUpEnabled(false)
-        actionBar?.title = getString(R.string.app_name)
+        val navigationComponent = activity as? NavigationComponent
+        navigationComponent?.setupActionBar(this)
+
     }
 
     override fun onResume() {
@@ -61,8 +61,8 @@ class UserListFragment : Fragment() {
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe {
-            recyclerAdapter.items = it
-        }
+                recyclerAdapter.items = it
+            }
     }
 
     override fun onPause() {
@@ -72,10 +72,7 @@ class UserListFragment : Fragment() {
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
-        menu.clear()
-        inflater.inflate(R.menu.search_user_menu, menu)
-
-        (menu.findItem(R.id.action_search).actionView as SearchView).apply {
+        (menu.findItem(R.id.action_search)?.actionView as? SearchView)?.apply {
             queryHint = getString(R.string.search_hint)
             setOnQueryTextListener(object : SearchView.OnQueryTextListener {
 

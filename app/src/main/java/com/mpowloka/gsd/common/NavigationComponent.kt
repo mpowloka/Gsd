@@ -6,4 +6,6 @@ interface NavigationComponent {
 
     fun <T : Fragment> openFragment(fragment: T)
 
+    fun <T : Fragment> setupActionBar(fragment: T, title: String? = null)
+
 }

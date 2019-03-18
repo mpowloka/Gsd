@@ -33,35 +33,7 @@ class ViewModelFactory(
 
     companion object {
 
-        private var FAKE_INSTANCE: ViewModelFactory? = null
-
         private var INSTANCE: ViewModelFactory? = null
-
-        fun getInstanceWithMockedRepository(): ViewModelFactory {
-            if(FAKE_INSTANCE == null) {
-                FAKE_INSTANCE = ViewModelFactory(object : UsersRepository {
-
-                    lateinit var user: User
-
-                    override fun getAllUsers() = Observable.just(listOf(
-                        User(0, "szumi", "LoL", "http://cdn.journaldev.com/wp-content/uploads/2016/11/android-image-picker-project-structure.png"),
-                        User(1, "sancia", "LoL", "https://avatars3.githubusercontent.com/u/583231?v=4"),
-                        User(2, "scheja", "LoL", "https://avatars3.githubusercontent.com/u/583231?v=4"),
-                        User(3, "seycher", "LoL", "https://avatars3.githubusercontent.com/u/583231?v=4"),
-                        User(4, "tomokene", "LoL", "https://avatars3.githubusercontent.com/u/583231?v=4")
-                    ))
-
-                    override fun getCurrentUser() = Observable.just(user)
-
-                    override fun setCurrentUser(user: User) {
-                        this.user = user
-                    }
-
-                })
-            }
-
-            return FAKE_INSTANCE!!
-        }
 
         fun getInstance(): ViewModelFactory {
             if (INSTANCE == null) {

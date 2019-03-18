@@ -2,14 +2,13 @@ package com.mpowloka.gsd.userdetails
 
 import android.os.Bundle
 import android.view.LayoutInflater
-import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
-import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProviders
 import com.bumptech.glide.Glide
 import com.mpowloka.gsd.R
+import com.mpowloka.gsd.common.NavigationComponent
 import com.mpowloka.gsd.common.ViewModelFactory
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
@@ -35,7 +34,6 @@ class UserDetailsFragment : Fragment() {
             ViewModelFactory.getInstance()
         ).get(UserDetailsViewModel::class.java)
 
-
     }
 
     override fun onResume() {
@@ -45,38 +43,23 @@ class UserDetailsFragment : Fragment() {
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe { userDetails ->
-            val actionBar = (activity as? AppCompatActivity)?.supportActionBar
-            actionBar?.title = userDetails.login
+                val navigationComponent = activity as? NavigationComponent
+                navigationComponent?.setupActionBar(this, userDetails.login)
 
-            login_tv.text = userDetails.login
-            organization_tv.text = userDetails.organization
-            Glide
-                .with(context ?: return@subscribe)
-                .load(userDetails.avatarUrl)
-                .into(user_picture_iv)
-        }
+
+                login_tv.text = userDetails.login
+                organization_tv.text = userDetails.organization
+                Glide
+                    .with(context ?: return@subscribe)
+                    .load(userDetails.avatarUrl)
+                    .into(user_picture_iv)
+            }
     }
 
     override fun onPause() {
         super.onPause()
 
         userDetailsDisposable.dispose()
-    }
-
-    override fun onOptionsItemSelected(item: MenuItem) = when(item.itemId) {
-        android.R.id.home -> {
-            activity?.onBackPressed()
-            true
-        }
-
-        else -> super.onOptionsItemSelected(item)
-    }
-
-    override fun onActivityCreated(savedInstanceState: Bundle?) {
-        super.onActivityCreated(savedInstanceState)
-
-        val actionBar = (activity as? AppCompatActivity)?.supportActionBar
-        actionBar?.setDisplayHomeAsUpEnabled(true)
     }
 
     companion object {
