@@ -5,7 +5,6 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.mpowloka.gsd.R
 import com.mpowloka.gsd.common.NavigationComponent
-import com.mpowloka.gsd.domain.user.User
 import com.mpowloka.gsd.userlist.UserListViewModel
 
 class UserListRecyclerAdapter(
@@ -16,7 +15,10 @@ class UserListRecyclerAdapter(
         setHasStableIds(true)
     }
 
-    var items: List<Item> = emptyList()
+    var data: UserListAdapterData = UserListAdapterData(
+        emptyList(),
+        null
+    )
         set(value) {
             field = value
             notifyDataSetChanged()
@@ -43,40 +45,32 @@ class UserListRecyclerAdapter(
     }
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
-        val item = items[position]
+        val item = data.items[position]
 
-        if (holder is UserViewHolder && item is Item.UserItem) {
-            holder.bind(item.user)
+        if (holder is UserViewHolder && item is UserListAdapterData.Item.UserItem) {
+            holder.bind(item.user, item == data.selectedItem)
         }
     }
 
-    override fun getItemViewType(position: Int) = when (items[position]) {
+    override fun getItemViewType(position: Int) = when (data.items[position]) {
 
-        is Item.NoInternetWarningItem -> NO_INTERNET_WARNING_TYPE
+        is UserListAdapterData.Item.NoInternetWarningItem -> NO_INTERNET_WARNING_TYPE
 
-        is Item.UserItem -> USER_TYPE
+        is UserListAdapterData.Item.UserItem -> USER_TYPE
 
     }
 
     override fun getItemId(position: Int): Long {
-        val item = items[position]
-        return when(item) {
+        val item = data.items[position]
+        return when (item) {
 
-            is Item.UserItem -> item.user.userId
+            is UserListAdapterData.Item.UserItem -> item.user.userId
 
-            Item.NoInternetWarningItem -> -1L
+            UserListAdapterData.Item.NoInternetWarningItem -> -1L
         }
     }
 
-    override fun getItemCount() = items.size
-
-    sealed class Item {
-
-        object NoInternetWarningItem : Item()
-
-        data class UserItem(val user: User) : Item()
-
-    }
+    override fun getItemCount() = data.items.size
 
     companion object {
 

@@ -1,31 +1,66 @@
 package com.mpowloka.gsd.userlist
 
 import androidx.lifecycle.ViewModel
+import com.mpowloka.gsd.domain.applicationstate.usecase.GetCurrentUserUseCase
+import com.mpowloka.gsd.domain.applicationstate.usecase.GetInitialUserSetUseCase
+import com.mpowloka.gsd.domain.applicationstate.usecase.SetCurrentUserUseCase
 import com.mpowloka.gsd.domain.user.User
 import com.mpowloka.gsd.domain.user.usecase.GetAllUsersUseCase
-import com.mpowloka.gsd.domain.user.usecase.SetCurrentUserUseCase
-import com.mpowloka.gsd.userlist.list.UserListRecyclerAdapter
+import com.mpowloka.gsd.userlist.list.UserListAdapterData
 import io.reactivex.Observable
+import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.rxkotlin.Observables
+import io.reactivex.schedulers.Schedulers
 import io.reactivex.subjects.BehaviorSubject
 
 class UserListViewModel(
     private val getAllUsersUseCase: GetAllUsersUseCase,
-    private val setCurrentUserUseCase: SetCurrentUserUseCase
+    private val setCurrentUserUseCase: SetCurrentUserUseCase,
+    private val getCurrentUserUseCase: GetCurrentUserUseCase,
+    private val getInitialUserSetUseCase: GetInitialUserSetUseCase
 ) : ViewModel() {
+
+    val adapterData: Observable<UserListAdapterData> by lazy {
+
+        Observables.combineLatest(
+            allUsers, getCurrentUserUseCase.get(), phraseSubject
+        ) { users, currentUser, phrase ->
+
+            UserListAdapterData(
+                users.filter { it.login.contains(phrase) }.map {
+                    UserListAdapterData.Item.UserItem(it) as UserListAdapterData.Item
+                },
+                UserListAdapterData.Item.UserItem(currentUser)
+            )
+        }
+    }
 
     private val phraseSubject = BehaviorSubject.create<String>().apply {
         onNext("")
     }
 
-    val itemsToDisplay: Observable<List<UserListRecyclerAdapter.Item>> by lazy {
-        Observables.combineLatest(
-            getAllUsersUseCase.get(), phraseSubject
-        ) { users, phrase ->
-            users.filter { it.login.contains(phrase) }.map {
-                UserListRecyclerAdapter.Item.UserItem(it) as UserListRecyclerAdapter.Item
-            }
-        }
+    private val allUsers: Observable<List<User>> by lazy {
+        getAllUsersUseCase.get()
+    }
+
+    private val initialUserSet: Observable<Boolean> by lazy {
+        getInitialUserSetUseCase.get()
+    }
+
+    private val compositeDisposable = CompositeDisposable()
+
+    fun initializeFirstCurrentUserIfNeeded() {
+        compositeDisposable.add(
+            Observables
+                .combineLatest(allUsers, initialUserSet)
+                .first(Pair(emptyList(), false))
+                .subscribeOn(Schedulers.io())
+                .subscribe { pair ->
+                    if(!pair.second) {
+                        setCurrentUser(pair.first.getOrNull(0) ?: return@subscribe)
+                    }
+                }
+        )
     }
 
     fun nextSearchPhrase(phrase: String) {
@@ -34,5 +69,9 @@ class UserListViewModel(
 
     fun setCurrentUser(user: User) {
         setCurrentUserUseCase.set(user)
+    }
+
+    override fun onCleared() {
+        compositeDisposable.dispose()
     }
 }

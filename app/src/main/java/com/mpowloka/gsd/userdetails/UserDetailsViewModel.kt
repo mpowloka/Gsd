@@ -1,7 +1,7 @@
 package com.mpowloka.gsd.userdetails
 
 import androidx.lifecycle.ViewModel
-import com.mpowloka.gsd.domain.user.usecase.GetCurrentUserUseCase
+import com.mpowloka.gsd.domain.applicationstate.usecase.GetCurrentUserUseCase
 import io.reactivex.Observable
 
 

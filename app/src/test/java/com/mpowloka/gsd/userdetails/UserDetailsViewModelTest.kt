@@ -1,7 +1,7 @@
 package com.mpowloka.gsd.userdetails
 
 import com.mpowloka.gsd.domain.user.User
-import com.mpowloka.gsd.domain.user.usecase.GetCurrentUserUseCase
+import com.mpowloka.gsd.domain.applicationstate.usecase.GetCurrentUserUseCase
 import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.whenever
 import io.reactivex.Observable

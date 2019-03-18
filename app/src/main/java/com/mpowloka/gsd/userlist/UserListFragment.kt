@@ -2,7 +2,6 @@ package com.mpowloka.gsd.userlist
 
 import android.os.Bundle
 import android.view.*
-import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.SearchView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProviders
@@ -37,31 +36,20 @@ class UserListFragment : Fragment() {
             ViewModelFactory.getInstance()
         ).get(UserListViewModel::class.java)
 
-        val context = context ?: return
-        val navigationComponent = (activity as? NavigationComponent) ?: return
-        recyclerAdapter = UserListRecyclerAdapter(navigationComponent, viewModel)
+        viewModel.initializeFirstCurrentUserIfNeeded()
 
-        recycler.layoutManager = LinearLayoutManager(context)
-        recycler.adapter = recyclerAdapter
-
-    }
-
-    override fun onActivityCreated(savedInstanceState: Bundle?) {
-        super.onActivityCreated(savedInstanceState)
-
-        val navigationComponent = activity as? NavigationComponent
-        navigationComponent?.setupActionBar(this)
+        setupRecyclerView()
 
     }
 
     override fun onResume() {
         super.onResume()
 
-        usersToDisplayDisposable = viewModel.itemsToDisplay
+        usersToDisplayDisposable = viewModel.adapterData
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe {
-                recyclerAdapter.items = it
+                recyclerAdapter.data = it
             }
     }
 
@@ -72,6 +60,12 @@ class UserListFragment : Fragment() {
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+        setupActionBar()
+
+        observeSearchViewInput(menu)
+    }
+
+    private fun observeSearchViewInput(menu: Menu) {
         (menu.findItem(R.id.action_search)?.actionView as? SearchView)?.apply {
             queryHint = getString(R.string.search_hint)
             setOnQueryTextListener(object : SearchView.OnQueryTextListener {
@@ -85,6 +79,20 @@ class UserListFragment : Fragment() {
 
             })
         }
+    }
+
+    private fun setupRecyclerView() {
+        val context = context ?: return
+        val navigationComponent = (activity as? NavigationComponent) ?: return
+        recyclerAdapter = UserListRecyclerAdapter(navigationComponent, viewModel)
+
+        recycler.layoutManager = LinearLayoutManager(context)
+        recycler.adapter = recyclerAdapter
+    }
+
+    private fun setupActionBar() {
+        val navigationComponent = activity as? NavigationComponent
+        navigationComponent?.setupActionBar(this)
     }
 
     companion object {
