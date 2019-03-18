@@ -6,8 +6,4 @@ interface UsersRepository {
 
     fun getAllUsers(): Observable<List<User>>
 
-    fun getCurrentUser(): Observable<User>
-
-    fun setCurrentUser(user: User)
-
 }

@@ -1,30 +1,29 @@
-package com.mpowloka.gsd.domain.user.usecase
+package com.mpowloka.gsd.domain.applicationstate.usecase
 
+import com.mpowloka.gsd.domain.applicationstate.ApplicationStateRepository
 import com.mpowloka.gsd.domain.user.User
-import com.mpowloka.gsd.domain.user.UsersRepository
 import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.times
 import com.nhaarman.mockitokotlin2.verify
-
 import org.junit.Before
 import org.junit.Test
 
 class SetCurrentUserUseCaseTest {
 
     private lateinit var SUT: SetCurrentUserUseCase
-    private lateinit var userRepositoryMock: UsersRepository
+    private lateinit var applicationStateRepositoryMock: ApplicationStateRepository
 
     @Before
     fun setup() {
-        userRepositoryMock = mock()
-        SUT = SetCurrentUserUseCase(userRepositoryMock)
+        applicationStateRepositoryMock = mock()
+        SUT = SetCurrentUserUseCase(applicationStateRepositoryMock)
     }
 
     @Test
     fun set_userPassedToRepository() {
         SUT.set(USER)
 
-        verify(userRepositoryMock, times(1)).setCurrentUser(USER)
+        verify(applicationStateRepositoryMock, times(1)).setCurrentUser(USER)
     }
 
     companion object {

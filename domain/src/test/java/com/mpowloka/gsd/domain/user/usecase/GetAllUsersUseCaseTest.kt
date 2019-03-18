@@ -5,7 +5,6 @@ import com.mpowloka.gsd.domain.user.UsersRepository
 import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.whenever
 import io.reactivex.Observable
-import org.junit.Assert.assertEquals
 import org.junit.Before
 import org.junit.Test
 
@@ -23,19 +22,18 @@ class GetAllUsersUseCaseTest {
     @Test
     fun get_repositoryQueried() {
         val result = SUT.get()
-        assertEquals(result, GET_ALL_USERS_RESULT)
+
+        result.test().assertValue(ALL_USERS)
     }
 
     private fun mockUsersRepository() {
         usersRepositoryMock = mock()
-        whenever(usersRepositoryMock.getAllUsers()).thenReturn(GET_ALL_USERS_RESULT)
+        whenever(usersRepositoryMock.getAllUsers()).thenReturn(Observable.just(ALL_USERS))
     }
 
     companion object {
-        private val GET_ALL_USERS_RESULT = Observable.just(
-            listOf(
-                User(0, "", "", "")
-            )
+        private val ALL_USERS = listOf(
+            User(0, "", "", "")
         )
     }
 }

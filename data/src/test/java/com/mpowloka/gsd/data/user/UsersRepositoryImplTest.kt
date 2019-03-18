@@ -28,21 +28,7 @@ class UsersRepositoryImplTest {
         }
     }
 
-    @Test
-    fun getCurrentUser_noCurrentUser_noUserEmitted() {
-        val result = SUT.getCurrentUser()
 
-        result.test().assertNoValues()
-    }
-
-    @Test
-    fun getCurrentUser_currentUserAvailable_currentUserReturned() {
-        SUT.setCurrentUser(USER)
-
-        val result = SUT.getCurrentUser()
-
-        result.test().assertValue(USER)
-    }
 
     private fun mockUsersApi() {
         usersApiMock = mock()
@@ -50,8 +36,6 @@ class UsersRepositoryImplTest {
     }
 
     companion object {
-
-        private val USER = User(42, "asdf", "movies", "")
 
         private val USERS_FROM_ENDPOINT = listOf(
             UserModel(

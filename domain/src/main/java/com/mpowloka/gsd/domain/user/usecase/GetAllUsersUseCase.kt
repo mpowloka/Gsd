@@ -7,4 +7,5 @@ class GetAllUsersUseCase(
 ) {
 
     fun get() = usersRepository.getAllUsers()
+
 }
