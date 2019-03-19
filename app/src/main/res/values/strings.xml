@@ -1,6 +1,7 @@
 <resources>
     <string name="app_name">Gsd</string>
-    <string name="search_hint">Search users</string>
+    <string name="search_hint">Search user</string>
     <string name="search_title">Search</string>
-    <string name="no_internet_message">No internet connection available. Data is displayed from cache.</string>
+    <string name="no_internet_warning">No internet connection available. Data is displayed from cache.</string>
+    <string name="tap_search_message">Tap search to query GitHub API</string>
 </resources>

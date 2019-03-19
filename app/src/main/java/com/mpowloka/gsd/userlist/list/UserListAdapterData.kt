@@ -9,7 +9,9 @@ data class UserListAdapterData(
 
     sealed class Item {
 
-        object NoInternetWarningItem : Item()
+        class WarningItem(val warning: String) : Item()
+
+        class MessageItem(val message: String) : Item()
 
         data class UserItem(val user: User) : Item()
 

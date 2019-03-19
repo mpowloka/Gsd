@@ -1,4 +1,4 @@
-package com.mpowloka.gsd.userlist.list
+package com.mpowloka.gsd.userlist.list.item
 
 import android.view.View
 import androidx.core.content.res.ResourcesCompat
