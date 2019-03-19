@@ -39,29 +39,73 @@
                     tools:src="@drawable/ic_launcher_foreground"/>
 
             <TextView
-                    android:id="@+id/login_tv"
+                    android:id="@+id/login_label_tv"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
 
                     android:layout_marginStart="16dp"
                     android:layout_marginEnd="16dp"
+
+                    android:textSize="18sp"
 
                     app:layout_constraintTop_toTopOf="@id/user_picture_iv"
                     app:layout_constraintStart_toEndOf="@id/user_picture_iv"
 
-                    tools:text="Jon Skeet"/>
+                    android:text="@string/login_label"/>
 
             <TextView
-                    android:id="@+id/organization_tv"
-                    android:layout_width="wrap_content"
+                    android:id="@+id/login_tv"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
 
                     android:layout_marginStart="16dp"
+                    android:layout_marginLeft="16dp"
                     android:layout_marginEnd="16dp"
+                    android:layout_marginRight="16dp"
+
+                    android:textSize="18sp"
+
+                    app:layout_constraintHorizontal_bias="0"
+                    app:layout_constraintTop_toTopOf="@id/user_picture_iv"
+                    app:layout_constraintStart_toEndOf="@id/login_label_tv"
+                    app:layout_constraintEnd_toEndOf="parent"
+
+                    tools:text="Jon Skeet"/>
+
+            <TextView
+                    android:id="@+id/organization_label_tv"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+
+                    android:textSize="18sp"
+
+                    android:layout_marginStart="16dp"
+                    android:layout_marginLeft="16dp"
                     android:layout_marginTop="16dp"
 
                     app:layout_constraintTop_toBottomOf="@id/login_tv"
                     app:layout_constraintStart_toEndOf="@id/user_picture_iv"
+
+                    android:text="@string/organization_label"/>
+
+            <TextView
+                    android:id="@+id/organization_tv"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+
+                    android:textSize="18sp"
+
+                    android:layout_marginStart="16dp"
+                    android:layout_marginLeft="16dp"
+                    android:layout_marginEnd="16dp"
+                    android:layout_marginRight="16dp"
+                    android:layout_marginTop="16dp"
+
+                    app:layout_constraintHorizontal_bias="0"
+
+                    app:layout_constraintTop_toBottomOf="@id/login_tv"
+                    app:layout_constraintStart_toEndOf="@id/organization_label_tv"
+                    app:layout_constraintEnd_toEndOf="parent"
 
                     tools:text="Google"/>
 

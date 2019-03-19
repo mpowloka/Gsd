@@ -35,6 +35,8 @@
 
                 android:layout_margin="16dp"
 
+                android:textSize="18sp"
+
                 app:layout_constraintStart_toEndOf="@id/icon_iv"
                 app:layout_constraintLeft_toRightOf="@id/icon_iv"
                 app:layout_constraintBottom_toBottomOf="parent"

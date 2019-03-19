@@ -4,4 +4,6 @@
     <string name="search_title">Search</string>
     <string name="no_internet_warning">No internet connection available. Data is displayed from cache.</string>
     <string name="tap_search_message">Tap search to query GitHub API</string>
+    <string name="login_label">Login:</string>
+    <string name="organization_label">Org URL:</string>
 </resources>

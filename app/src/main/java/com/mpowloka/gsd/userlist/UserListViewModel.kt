@@ -47,6 +47,7 @@ class UserListViewModel(
         compositeDisposable.add(
             Observables
                 .combineLatest(allUsers, initialUserSet)
+                .skip(1)
                 .take(1)
                 .subscribeOn(Schedulers.io())
                 .subscribe { pair ->
@@ -88,7 +89,8 @@ class UserListViewModel(
                     items,
                     UserListAdapterData.Item.UserItem(currentUser)
                 )
-            }.subscribe { result.onNext(it) }
+            }
+                .subscribe { result.onNext(it) }
         )
 
         return result
