@@ -2,6 +2,7 @@ package com.mpowloka.gsd.common
 
 import android.app.Application
 import androidx.lifecycle.ViewModel
+import com.mpowloka.gsd.MainViewModel
 import com.mpowloka.gsd.domain.applicationstate.ApplicationStateRepository
 import com.mpowloka.gsd.domain.user.UsersRepository
 import com.mpowloka.gsd.userdetails.UserDetailsViewModel
@@ -27,6 +28,13 @@ class ViewModelFactoryTest {
             applicationStateRepositoryMock,
             applicationMock
         )
+    }
+
+    @Test
+    fun create_mainViewModelClassProvided_mainViewModelReturned() {
+        val result = SUT.create(MainViewModel::class.java)
+
+        assertEquals(result::class.java, MainViewModel::class.java)
     }
 
     @Test

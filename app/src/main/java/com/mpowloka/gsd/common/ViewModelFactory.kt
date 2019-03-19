@@ -3,6 +3,7 @@ package com.mpowloka.gsd.common
 import android.app.Application
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
+import com.mpowloka.gsd.MainViewModel
 import com.mpowloka.gsd.data.applicationstate.ApplicationStateRepositoryImpl
 import com.mpowloka.gsd.data.user.UsersApi
 import com.mpowloka.gsd.data.user.UsersRepositoryImpl
@@ -24,6 +25,9 @@ class ViewModelFactory(
 
     @Suppress("UNCHECKED_CAST")
     override fun <T : ViewModel> create(modelClass: Class<T>): T = when (modelClass) {
+
+        MainViewModel::class.java -> MainViewModel() as T
+
         UserDetailsViewModel::class.java -> UserDetailsViewModel(
             GetCurrentUserUseCase(applicationStateRepository)
         ) as T

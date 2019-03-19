@@ -2,26 +2,28 @@ package com.mpowloka.gsd.userlist
 
 import android.os.Bundle
 import android.view.*
-import androidx.appcompat.widget.SearchView
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.mpowloka.gsd.MainViewModel
 import com.mpowloka.gsd.R
 import com.mpowloka.gsd.common.NavigationComponent
 import com.mpowloka.gsd.common.ViewModelFactory
 import com.mpowloka.gsd.userlist.list.UserListRecyclerAdapter
 import io.reactivex.android.schedulers.AndroidSchedulers
-import io.reactivex.disposables.Disposable
+import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
-
 import kotlinx.android.synthetic.main.fragment_user_list.*
 
 class UserListFragment : Fragment() {
 
     lateinit var viewModel: UserListViewModel
+    lateinit var mainViewModel: MainViewModel
 
-    private lateinit var usersToDisplayDisposable: Disposable
     private lateinit var recyclerAdapter: UserListRecyclerAdapter
+
+    private val compositeDisposable = CompositeDisposable()
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         setHasOptionsMenu(true)
@@ -30,12 +32,9 @@ class UserListFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        val application = activity?.application ?: return
 
-        viewModel = ViewModelProviders.of(
-            this,
-            ViewModelFactory.getInstance(application)
-        ).get(UserListViewModel::class.java)
+        val activity = activity ?: return
+        getViewModels(activity)
 
         viewModel.initializeFirstCurrentUserIfNeeded()
 
@@ -46,40 +45,49 @@ class UserListFragment : Fragment() {
     override fun onResume() {
         super.onResume()
 
-        usersToDisplayDisposable = viewModel.adapterData
-            .subscribeOn(Schedulers.io())
-            .observeOn(AndroidSchedulers.mainThread())
-            .subscribe {
-                recyclerAdapter.data = it
-            }
+        compositeDisposable.addAll(
+
+            viewModel.adapterData
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe {
+                    recyclerAdapter.data = it
+                },
+
+            mainViewModel.currentPhrase
+                .subscribe {
+                    viewModel.nextSearchPhrase(it)
+                },
+
+            mainViewModel.searchClicks
+                .subscribe {
+                    viewModel.fetchUser(it)
+                }
+
+        )
+
+
     }
 
     override fun onPause() {
         super.onPause()
-
-        usersToDisplayDisposable.dispose()
+        compositeDisposable.dispose()
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
         setupActionBar()
-
-        observeSearchViewInput(menu)
     }
 
-    private fun observeSearchViewInput(menu: Menu) {
-        (menu.findItem(R.id.action_search)?.actionView as? SearchView)?.apply {
-            queryHint = getString(R.string.search_hint)
-            setOnQueryTextListener(object : SearchView.OnQueryTextListener {
+    private fun getViewModels(activity: FragmentActivity) {
+        viewModel = ViewModelProviders.of(
+            this,
+            ViewModelFactory.getInstance(activity.application)
+        ).get(UserListViewModel::class.java)
 
-                override fun onQueryTextSubmit(query: String) = false
-
-                override fun onQueryTextChange(newText: String): Boolean {
-                    viewModel.nextSearchPhrase(newText)
-                    return true
-                }
-
-            })
-        }
+        mainViewModel = ViewModelProviders.of(
+            activity,
+            ViewModelFactory.getInstance(activity.application)
+        ).get(MainViewModel::class.java)
     }
 
     private fun setupRecyclerView() {
