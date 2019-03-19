@@ -28,10 +28,11 @@ class UserDetailsFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        val application = activity?.application ?: return
 
         viewModel = ViewModelProviders.of(
             this,
-            ViewModelFactory.getInstance()
+            ViewModelFactory.getInstance(application)
         ).get(UserDetailsViewModel::class.java)
 
     }

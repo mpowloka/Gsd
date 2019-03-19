@@ -30,10 +30,11 @@ class UserListFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        val application = activity?.application ?: return
 
         viewModel = ViewModelProviders.of(
             this,
-            ViewModelFactory.getInstance()
+            ViewModelFactory.getInstance(application)
         ).get(UserListViewModel::class.java)
 
         viewModel.initializeFirstCurrentUserIfNeeded()

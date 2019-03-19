@@ -1,6 +1,8 @@
 package com.mpowloka.gsd.userlist
 
+import android.app.Application
 import androidx.lifecycle.ViewModel
+import com.mpowloka.gsd.R
 import com.mpowloka.gsd.domain.applicationstate.usecase.GetCurrentUserUseCase
 import com.mpowloka.gsd.domain.applicationstate.usecase.GetInitialUserSetUseCase
 import com.mpowloka.gsd.domain.applicationstate.usecase.SetCurrentUserUseCase
@@ -17,7 +19,8 @@ class UserListViewModel(
     private val getAllUsersUseCase: GetAllUsersUseCase,
     private val setCurrentUserUseCase: SetCurrentUserUseCase,
     private val getCurrentUserUseCase: GetCurrentUserUseCase,
-    private val getInitialUserSetUseCase: GetInitialUserSetUseCase
+    private val getInitialUserSetUseCase: GetInitialUserSetUseCase,
+    private val application: Application
 ) : ViewModel() {
 
     val adapterData: Observable<UserListAdapterData> by lazy {
@@ -26,10 +29,10 @@ class UserListViewModel(
             allUsers, getCurrentUserUseCase.get(), phraseSubject
         ) { users, currentUser, phrase ->
 
+            val items = buildAdapterItems(users, phrase)
+
             UserListAdapterData(
-                users.filter { it.login.contains(phrase) }.map {
-                    UserListAdapterData.Item.UserItem(it) as UserListAdapterData.Item
-                },
+                items,
                 UserListAdapterData.Item.UserItem(currentUser)
             )
         }
@@ -73,5 +76,22 @@ class UserListViewModel(
 
     override fun onCleared() {
         compositeDisposable.dispose()
+    }
+
+    private fun buildAdapterItems(
+        users: List<User>,
+        phrase: String
+    ): MutableList<UserListAdapterData.Item> {
+
+        val items = users.filter { it.login.contains(phrase) }.map {
+            UserListAdapterData.Item.UserItem(it) as UserListAdapterData.Item
+        }.toMutableList()
+
+        if (items.isEmpty()) {
+            items.add(UserListAdapterData.Item.MessageItem(
+                application.getString(R.string.tap_search_message)
+            ))
+        }
+        return items
     }
 }

@@ -1,5 +1,6 @@
 package com.mpowloka.gsd.common
 
+import android.app.Application
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.mpowloka.gsd.data.applicationstate.ApplicationStateRepositoryImpl
@@ -16,7 +17,8 @@ import com.mpowloka.gsd.userlist.UserListViewModel
 
 class ViewModelFactory(
     private val usersRepository: UsersRepository,
-    private val applicationStateRepository: ApplicationStateRepository
+    private val applicationStateRepository: ApplicationStateRepository,
+    private val application: Application
 ) : ViewModelProvider.Factory {
 
     @Suppress("UNCHECKED_CAST")
@@ -29,7 +31,8 @@ class ViewModelFactory(
             GetAllUsersUseCase(usersRepository),
             SetCurrentUserUseCase(applicationStateRepository),
             GetCurrentUserUseCase(applicationStateRepository),
-            GetInitialUserSetUseCase(applicationStateRepository)
+            GetInitialUserSetUseCase(applicationStateRepository),
+            application
         ) as T
 
         else -> throw IllegalArgumentException("Unsupported ViewModel type")
@@ -39,13 +42,14 @@ class ViewModelFactory(
 
         private var INSTANCE: ViewModelFactory? = null
 
-        fun getInstance(): ViewModelFactory {
+        fun getInstance(application: Application): ViewModelFactory {
             if (INSTANCE == null) {
                 INSTANCE = ViewModelFactory(
                     UsersRepositoryImpl(
                         UsersApi.newInstance()
                     ),
-                    ApplicationStateRepositoryImpl()
+                    ApplicationStateRepositoryImpl(),
+                    application
                 )
             }
             return INSTANCE!!

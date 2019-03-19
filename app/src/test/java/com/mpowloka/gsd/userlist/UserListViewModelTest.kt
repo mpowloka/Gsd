@@ -1,10 +1,12 @@
 package com.mpowloka.gsd.userlist
 
-import com.mpowloka.gsd.domain.user.User
-import com.mpowloka.gsd.domain.user.usecase.GetAllUsersUseCase
+import android.app.Application
+import com.mpowloka.gsd.R
 import com.mpowloka.gsd.domain.applicationstate.usecase.GetCurrentUserUseCase
 import com.mpowloka.gsd.domain.applicationstate.usecase.GetInitialUserSetUseCase
 import com.mpowloka.gsd.domain.applicationstate.usecase.SetCurrentUserUseCase
+import com.mpowloka.gsd.domain.user.User
+import com.mpowloka.gsd.domain.user.usecase.GetAllUsersUseCase
 import com.mpowloka.gsd.userlist.list.UserListAdapterData
 import com.nhaarman.mockitokotlin2.*
 import io.reactivex.Observable
@@ -19,15 +21,17 @@ class UserListViewModelTest {
     private lateinit var getInitialUserSetUseCaseMock: GetInitialUserSetUseCase
     private lateinit var setCurrentUserUseCaseMock: SetCurrentUserUseCase
     private lateinit var getCurrentUserUseCaseMock: GetCurrentUserUseCase
+    private lateinit var applicationMock: Application
 
     @Before
     fun setup() {
-        mockUseCases()
+        initializeMocks()
         SUT = UserListViewModel(
             getAllUsersUseCaseMock,
             setCurrentUserUseCaseMock,
             getCurrentUserUseCaseMock,
-            getInitialUserSetUseCaseMock
+            getInitialUserSetUseCaseMock,
+            applicationMock
         )
     }
 
@@ -59,6 +63,15 @@ class UserListViewModelTest {
     }
 
     @Test
+    fun adapterData_noUsersAvailable_messageItemReturned() {
+        setupNoUsersAvailable()
+
+        SUT.adapterData.test().assertValue {
+            it.items.size == 1 && it.items[0] is UserListAdapterData.Item.MessageItem
+        }
+    }
+
+    @Test
     fun adapterData_currentUserReturned() {
         SUT.adapterData.test().assertValue {
             it.selectedItem == UserListAdapterData.Item.UserItem(USER)
@@ -81,11 +94,16 @@ class UserListViewModelTest {
         }
     }
 
-    private fun mockUseCases() {
+    private fun initializeMocks() {
+        applicationMock = mock()
         getInitialUserSetUseCaseMock = mock()
         getAllUsersUseCaseMock = mock()
         setCurrentUserUseCaseMock = mock()
         getCurrentUserUseCaseMock = mock()
+
+        whenever(applicationMock.getString(R.string.tap_search_message)).thenReturn(
+            SEARCH_MESSAGE_TEXT
+        )
 
         whenever(getAllUsersUseCaseMock.get()).thenReturn(
             Observable.just(ALL_USERS)
@@ -96,30 +114,73 @@ class UserListViewModelTest {
         )
     }
 
-    private fun setupCurrentUserSet(set: Boolean){
+    private fun setupCurrentUserSet(set: Boolean) {
         whenever(getInitialUserSetUseCaseMock.get()).thenReturn(
             Observable.just(set)
         )
     }
 
+    private fun setupNoUsersAvailable() {
+        whenever(getAllUsersUseCaseMock.get()).thenReturn(
+            Observable.just(emptyList())
+        )
+    }
+
     companion object {
+
+        private const val SEARCH_MESSAGE_TEXT = "SEARCH_MESSAGE_TEXT"
 
         private const val PHRASE = "m"
 
-        private val USER = User(0, "szumi", "LoL", "http://cdn.journaldev.com/wp-content/uploads/2016/11/android-image-picker-project-structure.png")
+        private val USER = User(
+            0,
+            "szumi",
+            "LoL",
+            "http://cdn.journaldev.com/wp-content/uploads/2016/11/android-image-picker-project-structure.png"
+        )
 
         private val ALL_USERS = listOf(
-            User(0, "szumi", "LoL", "http://cdn.journaldev.com/wp-content/uploads/2016/11/android-image-picker-project-structure.png"),
-            User(1, "sancia", "LoL", "http://cdn.journaldev.com/wp-content/uploads/2016/11/android-image-picker-project-structure.png"),
-            User(2, "seycher", "LoL", "http://cdn.journaldev.com/wp-content/uploads/2016/11/android-image-picker-project-structure.png"),
-            User(3, "tomokene", "LoL", "http://cdn.journaldev.com/wp-content/uploads/2016/11/android-image-picker-project-structure.png")
+            User(
+                0,
+                "szumi",
+                "LoL",
+                "http://cdn.journaldev.com/wp-content/uploads/2016/11/android-image-picker-project-structure.png"
+            ),
+            User(
+                1,
+                "sancia",
+                "LoL",
+                "http://cdn.journaldev.com/wp-content/uploads/2016/11/android-image-picker-project-structure.png"
+            ),
+            User(
+                2,
+                "seycher",
+                "LoL",
+                "http://cdn.journaldev.com/wp-content/uploads/2016/11/android-image-picker-project-structure.png"
+            ),
+            User(
+                3,
+                "tomokene",
+                "LoL",
+                "http://cdn.journaldev.com/wp-content/uploads/2016/11/android-image-picker-project-structure.png"
+            )
         )
 
         private val ALL_USERS_SHORT_DATA = ALL_USERS.map { UserListAdapterData.Item.UserItem(it) }
 
         private val PHRASE_FILTERED_USERS_DATA = listOf(
-            User(0, "szumi", "LoL", "http://cdn.journaldev.com/wp-content/uploads/2016/11/android-image-picker-project-structure.png"),
-            User(3, "tomokene", "LoL", "http://cdn.journaldev.com/wp-content/uploads/2016/11/android-image-picker-project-structure.png")
+            User(
+                0,
+                "szumi",
+                "LoL",
+                "http://cdn.journaldev.com/wp-content/uploads/2016/11/android-image-picker-project-structure.png"
+            ),
+            User(
+                3,
+                "tomokene",
+                "LoL",
+                "http://cdn.journaldev.com/wp-content/uploads/2016/11/android-image-picker-project-structure.png"
+            )
         ).map { UserListAdapterData.Item.UserItem(it) }
 
     }

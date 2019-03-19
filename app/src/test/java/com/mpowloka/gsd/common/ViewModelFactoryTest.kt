@@ -1,5 +1,6 @@
 package com.mpowloka.gsd.common
 
+import android.app.Application
 import androidx.lifecycle.ViewModel
 import com.mpowloka.gsd.domain.applicationstate.ApplicationStateRepository
 import com.mpowloka.gsd.domain.user.UsersRepository
@@ -16,13 +17,15 @@ class ViewModelFactoryTest {
 
     private lateinit var usersRepositoryMock: UsersRepository
     private lateinit var applicationStateRepositoryMock: ApplicationStateRepository
+    private lateinit var applicationMock: Application
 
     @Before
     fun setup() {
-        mockRepositories()
+        initializeMocks()
         SUT = ViewModelFactory(
             usersRepositoryMock,
-            applicationStateRepositoryMock
+            applicationStateRepositoryMock,
+            applicationMock
         )
     }
 
@@ -45,7 +48,8 @@ class ViewModelFactoryTest {
         SUT.create(object : ViewModel() {}::class.java)
     }
 
-    private fun mockRepositories() {
+    private fun initializeMocks() {
+        applicationMock = mock()
         applicationStateRepositoryMock = mock()
         usersRepositoryMock = mock()
     }

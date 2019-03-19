@@ -6,9 +6,9 @@ import androidx.recyclerview.widget.RecyclerView
 import com.mpowloka.gsd.R
 import com.mpowloka.gsd.common.NavigationComponent
 import com.mpowloka.gsd.userlist.UserListViewModel
-import com.mpowloka.gsd.userlist.list.item.WarningViewHolder
 import com.mpowloka.gsd.userlist.list.item.MessageViewHolder
 import com.mpowloka.gsd.userlist.list.item.UserViewHolder
+import com.mpowloka.gsd.userlist.list.item.WarningViewHolder
 
 class UserListRecyclerAdapter(
     private val navigationComponent: NavigationComponent,
@@ -55,8 +55,18 @@ class UserListRecyclerAdapter(
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         val item = data.items[position]
 
-        if (holder is UserViewHolder && item is UserListAdapterData.Item.UserItem) {
-            holder.bind(item.user, item == data.selectedItem)
+        when {
+            holder is UserViewHolder && item is UserListAdapterData.Item.UserItem -> {
+                holder.bind(item.user, item == data.selectedItem)
+            }
+
+            holder is MessageViewHolder && item is UserListAdapterData.Item.MessageItem -> {
+                holder.bind(item.message)
+            }
+
+            holder is WarningViewHolder && item is UserListAdapterData.Item.WarningItem -> {
+                holder.bind(item.warning)
+            }
         }
     }
 
