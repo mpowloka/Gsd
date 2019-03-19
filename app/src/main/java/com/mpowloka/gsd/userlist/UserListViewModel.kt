@@ -26,18 +26,7 @@ class UserListViewModel(
 ) : ViewModel() {
 
     val adapterData: Observable<UserListAdapterData> by lazy {
-
-        Observables.combineLatest(
-            allUsers, getCurrentUserUseCase.get(), phraseSubject
-        ) { users, currentUser, phrase ->
-
-            val items = buildAdapterItems(users, phrase)
-
-            UserListAdapterData(
-                items,
-                UserListAdapterData.Item.UserItem(currentUser)
-            )
-        }
+        buildAdapterDataObservable()
     }
 
     private val phraseSubject = BehaviorSubject.create<String>().apply {
@@ -58,11 +47,11 @@ class UserListViewModel(
         compositeDisposable.add(
             Observables
                 .combineLatest(allUsers, initialUserSet)
-                .first(Pair(emptyList(), false))
+                .take(1)
                 .subscribeOn(Schedulers.io())
                 .subscribe { pair ->
-                    if(!pair.second) {
-                        setCurrentUser(pair.first.getOrNull(0) ?: return@subscribe)
+                    if (!pair.second && pair.first.isNotEmpty()) {
+                        setCurrentUser(pair.first[0])
                     }
                 }
         )
@@ -84,6 +73,27 @@ class UserListViewModel(
         compositeDisposable.dispose()
     }
 
+    private fun buildAdapterDataObservable(): Observable<UserListAdapterData> {
+
+        val result = BehaviorSubject.create<UserListAdapterData>()
+
+        compositeDisposable.add(
+            Observables.combineLatest(
+                allUsers, getCurrentUserUseCase.get(), phraseSubject
+            ) { users, currentUser, phrase ->
+
+                val items = buildAdapterItems(users, phrase)
+
+                UserListAdapterData(
+                    items,
+                    UserListAdapterData.Item.UserItem(currentUser)
+                )
+            }.subscribe { result.onNext(it) }
+        )
+
+        return result
+    }
+
     private fun buildAdapterItems(
         users: List<User>,
         phrase: String
@@ -94,9 +104,11 @@ class UserListViewModel(
         }.toMutableList()
 
         if (items.isEmpty()) {
-            items.add(UserListAdapterData.Item.MessageItem(
-                application.getString(R.string.tap_search_message)
-            ))
+            items.add(
+                UserListAdapterData.Item.MessageItem(
+                    application.getString(R.string.tap_search_message)
+                )
+            )
         }
         return items
     }

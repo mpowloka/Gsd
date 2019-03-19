@@ -8,6 +8,7 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProviders
 import com.bumptech.glide.Glide
 import com.mpowloka.gsd.R
+import com.mpowloka.gsd.common.GsdApplication
 import com.mpowloka.gsd.common.NavigationComponent
 import com.mpowloka.gsd.common.ViewModelFactory
 import io.reactivex.android.schedulers.AndroidSchedulers
@@ -32,7 +33,7 @@ class UserDetailsFragment : Fragment() {
 
         viewModel = ViewModelProviders.of(
             this,
-            ViewModelFactory.getInstance(application)
+            ViewModelFactory(application as GsdApplication)
         ).get(UserDetailsViewModel::class.java)
 
     }

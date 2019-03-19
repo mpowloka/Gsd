@@ -1,13 +1,11 @@
 package com.mpowloka.gsd.common
 
-import android.app.Application
 import androidx.lifecycle.ViewModel
 import com.mpowloka.gsd.MainViewModel
-import com.mpowloka.gsd.domain.applicationstate.ApplicationStateRepository
-import com.mpowloka.gsd.domain.user.UsersRepository
 import com.mpowloka.gsd.userdetails.UserDetailsViewModel
 import com.mpowloka.gsd.userlist.UserListViewModel
 import com.nhaarman.mockitokotlin2.mock
+import com.nhaarman.mockitokotlin2.whenever
 import org.junit.Assert.assertEquals
 import org.junit.Before
 import org.junit.Test
@@ -16,16 +14,12 @@ class ViewModelFactoryTest {
 
     private lateinit var SUT: ViewModelFactory
 
-    private lateinit var usersRepositoryMock: UsersRepository
-    private lateinit var applicationStateRepositoryMock: ApplicationStateRepository
-    private lateinit var applicationMock: Application
+    private lateinit var applicationMock: GsdApplication
 
     @Before
     fun setup() {
-        initializeMocks()
+        mockApplication()
         SUT = ViewModelFactory(
-            usersRepositoryMock,
-            applicationStateRepositoryMock,
             applicationMock
         )
     }
@@ -56,9 +50,17 @@ class ViewModelFactoryTest {
         SUT.create(object : ViewModel() {}::class.java)
     }
 
-    private fun initializeMocks() {
+    private fun mockApplication() {
         applicationMock = mock()
-        applicationStateRepositoryMock = mock()
-        usersRepositoryMock = mock()
+        whenever(applicationMock.applicationStateRepository).thenReturn(mock())
+        whenever(applicationMock.usersFetcher).thenReturn(mock())
+        whenever(applicationMock.usersRepository).thenReturn(mock())
+        whenever(applicationMock.getCurrentUserUseCase).thenReturn(mock())
+        whenever(applicationMock.setCurrentUserUseCase).thenReturn(mock())
+        whenever(applicationMock.getAllUsersUseCase).thenReturn(mock())
+        whenever(applicationMock.getInitialUserSetUseCase).thenReturn(mock())
+        whenever(applicationMock.fetchUserUseCase).thenReturn(mock())
+        whenever(applicationMock.fetchUsersUseCase).thenReturn(mock())
+
     }
 }

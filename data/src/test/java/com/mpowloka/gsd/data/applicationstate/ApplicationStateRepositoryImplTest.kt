@@ -1,5 +1,6 @@
 package com.mpowloka.gsd.data.applicationstate
 
+import com.mpowloka.gsd.domain.applicationstate.ApplicationStateRepository
 import com.mpowloka.gsd.domain.user.User
 import org.junit.Before
 import org.junit.Test
@@ -17,7 +18,7 @@ class ApplicationStateRepositoryImplTest {
     fun getCurrentUser_noCurrentUser_noValueEmitted() {
         val result = SUT.getCurrentUser()
 
-        result.test().assertEmpty()
+        result.test().assertValue(ApplicationStateRepository.DEFAULT_USER)
     }
 
     @Test

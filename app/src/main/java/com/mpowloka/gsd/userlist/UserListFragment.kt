@@ -8,8 +8,10 @@ import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.mpowloka.gsd.MainViewModel
 import com.mpowloka.gsd.R
+import com.mpowloka.gsd.common.GsdApplication
 import com.mpowloka.gsd.common.NavigationComponent
 import com.mpowloka.gsd.common.ViewModelFactory
+import com.mpowloka.gsd.userlist.list.UserListAdapterData
 import com.mpowloka.gsd.userlist.list.UserListRecyclerAdapter
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
@@ -50,16 +52,29 @@ class UserListFragment : Fragment() {
             viewModel.adapterData
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
+                .doOnError {
+                    it.printStackTrace()
+                    recyclerAdapter.data = UserListAdapterData(
+                        listOf(UserListAdapterData.Item.WarningItem(it.stackTrace.toString())),
+                        null
+                    )
+                }
                 .subscribe {
                     recyclerAdapter.data = it
                 },
 
             mainViewModel.currentPhrase
+                .doOnError {
+                    it.printStackTrace()
+                }
                 .subscribe {
                     viewModel.nextSearchPhrase(it)
                 },
 
             mainViewModel.searchClicks
+                .doOnError {
+                    it.printStackTrace()
+                }
                 .subscribe {
                     viewModel.fetchUser(it)
                 }
@@ -81,12 +96,12 @@ class UserListFragment : Fragment() {
     private fun getViewModels(activity: FragmentActivity) {
         viewModel = ViewModelProviders.of(
             this,
-            ViewModelFactory.getInstance(activity.application)
+            ViewModelFactory(activity.application as GsdApplication)
         ).get(UserListViewModel::class.java)
 
         mainViewModel = ViewModelProviders.of(
             activity,
-            ViewModelFactory.getInstance(activity.application)
+            ViewModelFactory(activity.application as GsdApplication)
         ).get(MainViewModel::class.java)
     }
 

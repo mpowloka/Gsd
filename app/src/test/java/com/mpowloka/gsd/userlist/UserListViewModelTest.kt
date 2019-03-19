@@ -148,7 +148,7 @@ class UserListViewModelTest {
         private val USER = User(
             0,
             "szumi",
-            "LoL",
+            "GitHub",
             "http://cdn.journaldev.com/wp-content/uploads/2016/11/android-image-picker-project-structure.png"
         )
 
@@ -156,25 +156,25 @@ class UserListViewModelTest {
             User(
                 0,
                 "szumi",
-                "LoL",
+                "GitHub",
                 "http://cdn.journaldev.com/wp-content/uploads/2016/11/android-image-picker-project-structure.png"
             ),
             User(
                 1,
                 "sancia",
-                "LoL",
+                "GitHub",
                 "http://cdn.journaldev.com/wp-content/uploads/2016/11/android-image-picker-project-structure.png"
             ),
             User(
                 2,
                 "seycher",
-                "LoL",
+                "GitHub",
                 "http://cdn.journaldev.com/wp-content/uploads/2016/11/android-image-picker-project-structure.png"
             ),
             User(
                 3,
                 "tomokene",
-                "LoL",
+                "GitHub",
                 "http://cdn.journaldev.com/wp-content/uploads/2016/11/android-image-picker-project-structure.png"
             )
         )
@@ -185,13 +185,13 @@ class UserListViewModelTest {
             User(
                 0,
                 "szumi",
-                "LoL",
+                "GitHub",
                 "http://cdn.journaldev.com/wp-content/uploads/2016/11/android-image-picker-project-structure.png"
             ),
             User(
                 3,
                 "tomokene",
-                "LoL",
+                "GitHub",
                 "http://cdn.journaldev.com/wp-content/uploads/2016/11/android-image-picker-project-structure.png"
             )
         ).map { UserListAdapterData.Item.UserItem(it) }

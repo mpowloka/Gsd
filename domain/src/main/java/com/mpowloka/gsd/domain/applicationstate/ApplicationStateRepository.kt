@@ -11,4 +11,10 @@ interface ApplicationStateRepository {
 
     fun setCurrentUser(user: User)
 
+    companion object {
+        val DEFAULT_USER = User(
+            -1, "", "", ""
+        )
+    }
+
 }

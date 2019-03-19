@@ -23,7 +23,7 @@ class MainActivity : AppCompatActivity(), NavigationComponent {
 
         viewModel = ViewModelProviders.of(
             this,
-            ViewModelFactory.getInstance(application)
+            ViewModelFactory(application as GsdApplication)
         ).get(MainViewModel::class.java)
 
         setSupportActionBar(toolbar)

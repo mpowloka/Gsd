@@ -7,9 +7,7 @@ import io.reactivex.subjects.BehaviorSubject
 
 class ApplicationStateRepositoryImpl : ApplicationStateRepository {
 
-    private val currentUserSubject = BehaviorSubject.createDefault<User>(User(
-        -1, "", "", ""
-    ))
+    private val currentUserSubject = BehaviorSubject.createDefault<User>(ApplicationStateRepository.DEFAULT_USER)
 
     private val initialUserSetSubject = BehaviorSubject.createDefault(false)
     private var initialUserSetFlag = false
