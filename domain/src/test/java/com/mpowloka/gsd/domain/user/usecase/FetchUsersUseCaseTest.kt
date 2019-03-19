@@ -7,29 +7,23 @@ import com.nhaarman.mockitokotlin2.verify
 import org.junit.Before
 import org.junit.Test
 
-class FetchUserUseCaseTest {
+class FetchUsersUseCaseTest {
 
-    private lateinit var SUT: FetchUserUseCase
-
+    private lateinit var SUT: FetchUsersUseCase
     private lateinit var usersFetcherMock: UsersFetcher
 
     @Before
     fun setup() {
         usersFetcherMock = mock()
-        SUT = FetchUserUseCase(
+        SUT = FetchUsersUseCase(
             usersFetcherMock
         )
     }
 
     @Test
-    fun fetch_usernamePassedToRepository() {
-        SUT.fetch(USERNAME)
+    fun fetch_apiClientTriggered() {
+        SUT.fetch()
 
-        verify(usersFetcherMock, times(1)).fetchUser(USERNAME)
+        verify(usersFetcherMock, times(1)).fetchUsers()
     }
-
-    companion object {
-        private const val USERNAME = "USERNAME"
-    }
-
 }

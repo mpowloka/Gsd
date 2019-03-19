@@ -2,12 +2,12 @@ package com.mpowloka.gsd.domain.user.usecase
 
 import com.mpowloka.gsd.domain.user.UsersFetcher
 
-class FetchUserUseCase(
+class FetchUsersUseCase(
     private val usersFetcher: UsersFetcher
 ) {
 
-    fun fetch(username: String) {
-        usersFetcher.fetchUser(username)
+    fun fetch() {
+        usersFetcher.fetchUsers()
     }
 
 }

@@ -6,6 +6,8 @@ interface UsersRepository {
 
     fun getAllUsers(): Observable<List<User>>
 
-    fun fetchUser(username: String)
+    fun addUser(user: User)
+
+    fun addUsers(users: List<User>)
 
 }
