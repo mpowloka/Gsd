@@ -6,6 +6,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.SearchView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProviders
+import com.mpowloka.gsd.common.GsdApplication
 import com.mpowloka.gsd.common.NavigationComponent
 import com.mpowloka.gsd.common.ViewModelFactory
 import com.mpowloka.gsd.userdetails.UserDetailsFragment
@@ -28,16 +29,21 @@ class MainActivity : AppCompatActivity(), NavigationComponent {
         setSupportActionBar(toolbar)
 
         if (fragment_container?.childCount == 0) {
-            openFragment(UserListFragment.newInstance())
+            openFragment(UserListFragment.newInstance(), false)
         }
     }
 
-    override fun <T : Fragment> openFragment(fragment: T) {
+    override fun <T : Fragment> openFragment(fragment: T, addToBackStack: Boolean) {
 
         if (!resources.getBoolean(R.bool.isLandscapeTablet)) {
-            supportFragmentManager.beginTransaction()
+            val transaction = supportFragmentManager.beginTransaction()
+
+            if (addToBackStack) {
+                transaction.addToBackStack(null)
+            }
+
+            transaction
                 .replace(R.id.fragment_container, fragment)
-                .addToBackStack(null)
                 .commit()
         }
 
