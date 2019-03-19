@@ -11,6 +11,7 @@ import com.mpowloka.gsd.domain.applicationstate.usecase.GetCurrentUserUseCase
 import com.mpowloka.gsd.domain.applicationstate.usecase.GetInitialUserSetUseCase
 import com.mpowloka.gsd.domain.applicationstate.usecase.SetCurrentUserUseCase
 import com.mpowloka.gsd.domain.user.UsersRepository
+import com.mpowloka.gsd.domain.user.usecase.FetchUserUseCase
 import com.mpowloka.gsd.domain.user.usecase.GetAllUsersUseCase
 import com.mpowloka.gsd.userdetails.UserDetailsViewModel
 import com.mpowloka.gsd.userlist.UserListViewModel
@@ -32,6 +33,7 @@ class ViewModelFactory(
             SetCurrentUserUseCase(applicationStateRepository),
             GetCurrentUserUseCase(applicationStateRepository),
             GetInitialUserSetUseCase(applicationStateRepository),
+            FetchUserUseCase(usersRepository),
             application
         ) as T
 

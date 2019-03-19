@@ -6,4 +6,6 @@ interface UsersRepository {
 
     fun getAllUsers(): Observable<List<User>>
 
+    fun fetchUser(username: String)
+
 }

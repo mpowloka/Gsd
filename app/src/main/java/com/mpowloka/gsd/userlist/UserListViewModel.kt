@@ -7,6 +7,7 @@ import com.mpowloka.gsd.domain.applicationstate.usecase.GetCurrentUserUseCase
 import com.mpowloka.gsd.domain.applicationstate.usecase.GetInitialUserSetUseCase
 import com.mpowloka.gsd.domain.applicationstate.usecase.SetCurrentUserUseCase
 import com.mpowloka.gsd.domain.user.User
+import com.mpowloka.gsd.domain.user.usecase.FetchUserUseCase
 import com.mpowloka.gsd.domain.user.usecase.GetAllUsersUseCase
 import com.mpowloka.gsd.userlist.list.UserListAdapterData
 import io.reactivex.Observable
@@ -20,6 +21,7 @@ class UserListViewModel(
     private val setCurrentUserUseCase: SetCurrentUserUseCase,
     private val getCurrentUserUseCase: GetCurrentUserUseCase,
     private val getInitialUserSetUseCase: GetInitialUserSetUseCase,
+    private val fetchUserUseCase: FetchUserUseCase,
     private val application: Application
 ) : ViewModel() {
 
@@ -66,6 +68,10 @@ class UserListViewModel(
         )
     }
 
+    fun fetchUser(username: String) {
+        fetchUserUseCase.fetch(username)
+    }
+
     fun nextSearchPhrase(phrase: String) {
         phraseSubject.onNext(phrase)
     }
@@ -94,4 +100,5 @@ class UserListViewModel(
         }
         return items
     }
+
 }

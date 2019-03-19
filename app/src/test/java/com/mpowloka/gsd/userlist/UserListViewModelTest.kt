@@ -6,6 +6,7 @@ import com.mpowloka.gsd.domain.applicationstate.usecase.GetCurrentUserUseCase
 import com.mpowloka.gsd.domain.applicationstate.usecase.GetInitialUserSetUseCase
 import com.mpowloka.gsd.domain.applicationstate.usecase.SetCurrentUserUseCase
 import com.mpowloka.gsd.domain.user.User
+import com.mpowloka.gsd.domain.user.usecase.FetchUserUseCase
 import com.mpowloka.gsd.domain.user.usecase.GetAllUsersUseCase
 import com.mpowloka.gsd.userlist.list.UserListAdapterData
 import com.nhaarman.mockitokotlin2.*
@@ -21,6 +22,7 @@ class UserListViewModelTest {
     private lateinit var getInitialUserSetUseCaseMock: GetInitialUserSetUseCase
     private lateinit var setCurrentUserUseCaseMock: SetCurrentUserUseCase
     private lateinit var getCurrentUserUseCaseMock: GetCurrentUserUseCase
+    private lateinit var fetchUserUseCase: FetchUserUseCase
     private lateinit var applicationMock: Application
 
     @Before
@@ -31,8 +33,16 @@ class UserListViewModelTest {
             setCurrentUserUseCaseMock,
             getCurrentUserUseCaseMock,
             getInitialUserSetUseCaseMock,
+            fetchUserUseCase,
             applicationMock
         )
+    }
+
+    @Test
+    fun fetchUser_usernamePassedToUseCase() {
+        SUT.fetchUser(USERNAME)
+
+        verify(fetchUserUseCase, times(1)).fetch(USERNAME)
     }
 
     @Test
@@ -96,6 +106,7 @@ class UserListViewModelTest {
 
     private fun initializeMocks() {
         applicationMock = mock()
+        fetchUserUseCase = mock()
         getInitialUserSetUseCaseMock = mock()
         getAllUsersUseCaseMock = mock()
         setCurrentUserUseCaseMock = mock()
@@ -127,6 +138,8 @@ class UserListViewModelTest {
     }
 
     companion object {
+
+        private const val USERNAME = "USERNAME"
 
         private const val SEARCH_MESSAGE_TEXT = "SEARCH_MESSAGE_TEXT"
 
