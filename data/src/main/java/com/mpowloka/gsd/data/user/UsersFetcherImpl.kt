@@ -16,11 +16,16 @@ class UsersFetcherImpl(
             .getAllUsers()
             .subscribeOn(Schedulers.io())
             .take(1)
-            .subscribe { models ->
-                usersRepository.addUsers(
-                    models.map { it.toUser() }
-                )
-            }
+            .subscribe(
+                { models ->
+                    usersRepository.addUsers(
+                        models.map { it.toUser() }
+                    )
+                },
+                { exception ->
+                    exception.printStackTrace()
+                }
+            )
     }
 
     @SuppressLint("CheckResult")
@@ -29,9 +34,13 @@ class UsersFetcherImpl(
             .getUser(username)
             .subscribeOn(Schedulers.io())
             .take(1)
-            .subscribe { model ->
-                usersRepository.addUser(model.toUser())
-            }
+            .subscribe(
+                { model ->
+                    usersRepository.addUser(model.toUser())
+                },
+                { exception ->
+                    exception.printStackTrace()
+                })
     }
 
 }

@@ -25,7 +25,7 @@ class UserListFragment : Fragment() {
 
     private lateinit var recyclerAdapter: UserListRecyclerAdapter
 
-    private val compositeDisposable = CompositeDisposable()
+    private lateinit var compositeDisposable: CompositeDisposable
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         setHasOptionsMenu(true)
@@ -46,6 +46,8 @@ class UserListFragment : Fragment() {
 
     override fun onResume() {
         super.onResume()
+
+        compositeDisposable = CompositeDisposable()
 
         compositeDisposable.addAll(
 
@@ -78,10 +80,7 @@ class UserListFragment : Fragment() {
                 .subscribe {
                     viewModel.fetchUser(it)
                 }
-
         )
-
-
     }
 
     override fun onPause() {

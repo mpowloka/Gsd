@@ -68,6 +68,7 @@ class MainActivity : AppCompatActivity(), NavigationComponent {
                 supportActionBar?.title = getString(R.string.app_name)
                 supportActionBar?.setDisplayHomeAsUpEnabled(false)
                 menuInflater.inflate(R.menu.search_user_menu, toolbar.menu)
+                viewModel.setCurrentPhrase("")
 
                 (toolbar.menu.findItem(R.id.action_search)?.actionView as? SearchView)?.apply {
                     queryHint = getString(R.string.search_hint)
